@@ -22,8 +22,7 @@ public class Program
     List<char> incorrectLettersGuessed = new List<char>();
 
     // Run the code
-    PlayTheGame(targetArray, blankArray, incorrectLettersGuessed);    
-    
+    PlayTheGame(targetArray, blankArray, incorrectLettersGuessed);  
   }
 
   // Chooses a random word from a string array.  Returns the word selected.
@@ -42,6 +41,7 @@ public class Program
     System.Console.WriteLine("Welcome to our hangman game!  You all know how this works.  Choose your letters wisely, or"
       + " you'll pay the price WITH YOUR LIFE!");
     System.Console.WriteLine("If you wish to exit the game at any point, enter 0.");
+    System.Console.WriteLine();
   }
 
   // Changes all of characters in a char array to '_' to give hidden appearance for the game.
@@ -74,10 +74,30 @@ public class Program
   // Prompts the user to input a string and returns it as a character
   static char GetUserInput()
   {
-    System.Console.Write("Enter a letter: ");
-    string userString = Console.ReadLine();
-    char userChar = Convert.ToChar(userString);
+    bool valid = false;
+    string userString = "";
 
+    System.Console.Write("Enter a letter: ");
+
+    // While loop to confirm that the user only input one letter.
+    while (valid == false)
+    {
+      userString = Console.ReadLine();
+      if (userString.Length > 1)
+      {
+        System.Console.WriteLine("Only enter one letter at a time.  Please try again...");
+      }
+      else if (userString.Length == 0)
+      {
+        System.Console.WriteLine("You failed to enter a letter.  Please try again...");
+      }
+      else
+      {
+        valid = true;
+      }
+    }
+    char userChar = Convert.ToChar(userString);
+    
     return userChar;
   }
 
@@ -96,11 +116,11 @@ public class Program
     }
     if (correctGuess == true)
     {
-      System.Console.WriteLine("Good guess!");
+      System.Console.WriteLine("\nGood guess!");
     }
     else
     {
-      System.Console.WriteLine("You chose poorly. There are no " + input + "'s in this word...");
+      System.Console.WriteLine("\nYou chose poorly. There are no " + input + "'s in this word...");
       list.Add(input);
     }
 
@@ -121,6 +141,7 @@ public class Program
     {
       correct = false;
 
+      DisplayGallows(livesLeft);
       DisplayWord(hiddenArray);
       userGuess = GetUserInput();
       
@@ -135,31 +156,33 @@ public class Program
       {
         livesLeft --;
       }
+      
       // Check to see if the user won
       wonTheGame = DidYouWin(hiddenArray);
       if (wonTheGame)
       {
-        System.Console.Clear();
-        System.Console.WriteLine("Congratulations! You live to fight another day!");
+        System.Console.Write("\nYOU WIN! The word was: ");
+        DisplayWord(wordArray);
+        System.Console.WriteLine("Congratulations! You live to fight another day!\n");
         break;
       }
-
-      System.Console.Clear();
-      System.Console.WriteLine("Lives Remaining: " + livesLeft);
-      System.Console.Write("Incorrect Guesses: ");
+      
+      // If they didn't win, show them their incorrect guesses so far
+      System.Console.Write("\nIncorrect Guesses: ");
       DisplayList(incorrectGuesses);
       System.Console.WriteLine();
-     
-      if (livesLeft == 0)
-      {
-        System.Console.Write("YOU LOSE.  The correct word was: ");
-        DisplayWord(wordArray);
-      }
 
       
+      // Check to see if all lives are gone.  If so, tell them.
+      if (livesLeft == 0)
+      {
+        DisplayGallows(livesLeft);
+        System.Console.Write("\nYOU LOSE.  The correct word was: ");
+        DisplayWord(wordArray);
+        System.Console.WriteLine();
+      }
     }
   }
-
   // Checks to see if the hidden array has any '_' remaining.  Returns a boolean indicating if the user has won the game.
   static bool DidYouWin(char[] array)
   {
@@ -169,6 +192,7 @@ public class Program
       if (c == '_')
       {
         wonTheGame = false;
+        break;
       }
       else
       {
@@ -176,5 +200,113 @@ public class Program
       }
     }
     return wonTheGame;
+  }
+ 
+  // Display the hangman status visually
+  static void DisplayGallows(int livesRemaining)
+  {
+    string [] attempts = {
+            @"
+               
+            ==========
+            ||       |
+            ||     
+            ||       
+            ||       
+            ||      
+            ||
+            ========== ",      
+
+            @"
+               
+            ==========
+            ||       |
+            ||       O 
+            ||       
+            ||       
+            ||      
+            ||
+            ========== ",    
+
+             @"
+               
+            ==========
+            ||       |
+            ||     \ O 
+            ||       
+            ||       
+            ||       
+            ||
+            ========== ",    
+
+              @"
+               
+            ==========
+            ||       |
+            ||     \ O /
+            ||       
+            ||       
+            ||        
+            ||
+            ========== ",    
+
+             @"
+               
+            ==========
+            ||       |
+            ||     \ O /
+            ||       |
+            ||       |
+            ||       
+            ||
+            ========== ",    
+
+             @"
+               
+            ==========
+            ||       |
+            ||     \ O /
+            ||       |
+            ||       |
+            ||        \ 
+            ||
+            ========== ",  
+
+             @"
+               
+            ==========
+            ||       |
+            ||     \ O /
+            ||       |
+            ||       |
+            ||      / \ 
+            ||
+            ========== ",     
+         };
+
+    switch(livesRemaining)
+    {
+      case 6:
+        System.Console.WriteLine(attempts[0]);
+        break;
+      case 5:
+        System.Console.WriteLine(attempts[1]);
+        break;
+      case 4:
+        System.Console.WriteLine(attempts[2]);
+        break;
+      case 3:
+        System.Console.WriteLine(attempts[3]);
+        break;
+      case 2:
+        System.Console.WriteLine(attempts[4]);
+        break;
+      case 1:
+        System.Console.WriteLine(attempts[5]);
+        break;
+      case 0:
+        System.Console.WriteLine(attempts[6]);
+        break;
+    }
   }
 }
