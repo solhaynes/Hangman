@@ -5,7 +5,7 @@ public class Program
   public static void Main()
   {
     //string array containing all words which can be used in the game.
-    string[] wordLibrary = {"rock", "alphabet", "jumbo", "dragon", "array", "console"};  
+    string[] wordLibrary = {"rock", "alphabet", "jumbo", "dragon", "array", "console", "billiards", "swimming", "github"};  
     int librarySize = wordLibrary.Length;
     // Choose random word from the library of words.
     string word = ChooseWord(wordLibrary, librarySize);
@@ -38,8 +38,8 @@ public class Program
   static void WelcomeMessage()
   {
     System.Console.Clear();
-    System.Console.WriteLine("Welcome to our hangman game!  You all know how this works.  Choose your letters wisely, or"
-      + " you'll pay the price WITH YOUR LIFE!");
+    System.Console.WriteLine("Welcome to our hangman game!  Enter one letter at a time to complete the hidden word.  Wrong guesses " +
+     "result in an additional body part being added to the gallows.  Choose your letters wisely, or you'll pay the price WITH YOUR LIFE!");
     System.Console.WriteLine("If you wish to exit the game at any point, enter 0.");
     System.Console.WriteLine();
   }
@@ -116,11 +116,11 @@ public class Program
     }
     if (correctGuess == true)
     {
-      System.Console.WriteLine("\nGood guess!");
+      System.Console.WriteLine("\n\nGood guess!");
     }
     else
     {
-      System.Console.WriteLine("\nYou chose poorly. There are no " + input + "'s in this word...");
+      System.Console.WriteLine("\n\nYou chose poorly. There are no " + input + "'s in this word...");
       list.Add(input);
     }
 
